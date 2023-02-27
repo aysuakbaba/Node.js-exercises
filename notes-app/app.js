@@ -1,6 +1,7 @@
 const chalk = require('chalk')
 const { demandOption, argv } = require('yargs')
 const yargs = require('yargs')
+const { listNotes } = require('./notes.js')
 const notes = require('./notes.js')
 
 
@@ -38,9 +39,7 @@ yargs.command({
         }
     },
     
-    handler: function(argv) {
-        notes.addNotes(argv.title, argv.body)
-    }
+    handler: (argv) => notes.addNotes(argv.title, argv.body)
 })
 
 // Create remove command
@@ -55,18 +54,15 @@ yargs.command({
             type: 'string'
         }
     },
-    handler: function(argv) {
-        notes.removeNotes(argv.title)
-    }
+    handler:(argv)=> notes.removeNotes(argv.title)
 })
 
 //Create read command 
 yargs.command({
     command:'read',
     describe:'Read the note',
-    handler: function() {
-        console.log('Reading the note')
-    }
+    handler:() => console.log('Reading the note')
+    
 })
 
 // Create list command
@@ -74,9 +70,7 @@ yargs.command({
 yargs.command({
     command:'list',
     describe:'List the notes',
-    handler: function() {
-        console.log('Listing the notes!')
-    }
+    handler: ()=> notes.listNotes()
 })
 
 yargs.parse() // it does the same thing as console.log(yargs.argv), it just donesn't take any arguments
