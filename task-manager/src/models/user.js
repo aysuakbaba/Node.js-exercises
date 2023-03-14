@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const userSchema = new mongoose.Schema({
     name:{
@@ -42,8 +43,30 @@ const userSchema = new mongoose.Schema({
                 throw new Error("Password can't be password")
         }
     }
-}
+},
+tokens: [{
+    token: {
+        type: String,
+        required: true
+    }
+}]
 })
+
+//The Schema.methods object directly to save an instance method.
+//Do not declare methods using ES6 arrow functions (=>). Arrow functions explicitly prevent binding this,
+// so your method will not have access to the document and the above examples will not work.
+//Do not declare statics using ES6 arrow functions (=>). 
+//Arrow functions explicitly prevent binding this, so the above examples will not work because of the value of this.
+userSchema.methods.generateAuthToken = async function () {
+    const user = this 
+    const token = jwt.sign({ _id: user._id.toString() }, 'thisisaysu')
+
+    user.tokens = user.tokens.concat({ token })
+    await user.save()
+
+    return token
+}
+
 
 userSchema.statics.findByCredentials = async (email,password) => {
     const user = await User.findOne({ email })
