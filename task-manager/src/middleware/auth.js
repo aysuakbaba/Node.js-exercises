@@ -10,7 +10,8 @@ const auth = async (req,res,next) => {
         if(!user){
             throw new Error()
         }
-
+        //to specify which token have been used
+        req.token = token
         req.user = user
         next()
 
