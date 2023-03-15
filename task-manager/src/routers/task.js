@@ -11,7 +11,7 @@ router.post('/tasks',auth, async (req, res) => {
     })
     try{
         await task.save()
-        res.send(task)
+        res.status(201).send(task)
 
     }catch(e){
         res.status(400).send(e)
@@ -38,7 +38,7 @@ router.get('/tasks/:id', auth,async (req,res) => {
         const task = await Task.findOne({ _id, owner: req.user._id })
 
         if(!task){
-            return res.status(404).send
+            return res.status(404).send()
         }
         res.send(task)
 
